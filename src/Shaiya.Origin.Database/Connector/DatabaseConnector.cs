@@ -1,19 +1,19 @@
-﻿using Npgsql;
-using Shaiya.Origin.Common.Logging;
+﻿using Shaiya.Origin.Common.Logging;
 using System;
+using System.Data.SqlClient;
 
 namespace Shaiya.Origin.Database.Connector
 {
     public class DatabaseConnector
     {
-        public bool Connect(string database)
+        public bool Connect()
         {
-            var connection = GetConnection(database);
+            var connection = GetConnection();
 
             // Check the connection is valid
             try
             {
-                using (connection = new NpgsqlConnection(connection.ConnectionString))
+                using (connection)
                 {
                     connection.Open();
                     connection.Close();
@@ -27,13 +27,13 @@ namespace Shaiya.Origin.Database.Connector
             }
         }
 
-        public NpgsqlConnection GetConnection(string database)
+        public SqlConnection GetConnection(string database = "")
         {
             // Create a new connection instance
-            var connection = new NpgsqlConnection();
+            var connection = new SqlConnection();
 
             // The connection string
-            string connString = "Host=127.0.0.1;Username=postgres;Password=password;Database=" + database;
+            string connString = "Data Source=127.0.0.1;User ID=Shaiya;Password=Shaiya123";
 
             // Set the connection string
             connection.ConnectionString = connString;

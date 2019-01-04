@@ -1,11 +1,11 @@
-﻿using Npgsql;
-using Shaiya.Origin.Common.Database.Structs.Game;
+﻿using Shaiya.Origin.Common.Database.Structs.Game;
 using Shaiya.Origin.Common.Logging;
 using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
 using Shaiya.Origin.Common.Serializer;
 using Shaiya.Origin.Database.Connector;
 using System;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
@@ -34,9 +34,9 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
             try
             {
-                using (NpgsqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
+                using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
                 {
-                    NpgsqlCommand cmd = new NpgsqlCommand("load_game_character", connection);
+                    SqlCommand cmd = new SqlCommand("load_game_character", connection);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue(":user_id", userId);
                     cmd.Parameters.AddWithValue(":character_id", characterId);
@@ -44,7 +44,7 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
                     connection.Open();
 
-                    NpgsqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.Read())
                     {

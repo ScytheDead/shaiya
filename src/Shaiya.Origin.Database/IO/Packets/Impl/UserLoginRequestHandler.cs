@@ -1,4 +1,4 @@
-﻿using Npgsql;
+﻿using System.Data.SqlClient;
 using Shaiya.Origin.Common.Database.Structs.Login;
 using Shaiya.Origin.Common.Logging;
 using Shaiya.Origin.Common.Networking.Packets;
@@ -28,9 +28,9 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
             Logger.Info("Password: {0}", password);
             Logger.Info("Ip: {0}", ipAddress);
 
-            using (NpgsqlConnection connection = new DatabaseConnector().GetConnection("origin_userdata"))
+            using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_userdata"))
             {
-                var cmd = new NpgsqlCommand("validate_login_request", connection);
+                var cmd = new SqlCommand("validate_login_request", connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue(":username", username);
                 cmd.Parameters.AddWithValue(":password", password);

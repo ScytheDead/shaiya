@@ -1,9 +1,9 @@
-﻿using Npgsql;
-using Shaiya.Origin.Common.Networking.Packets;
+﻿using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
 using Shaiya.Origin.Common.Serializer;
 using Shaiya.Origin.Database.Connector;
 using System;
+using System.Data.SqlClient;
 
 namespace Shaiya.Origin.Database.IO.Packets.Impl
 {
@@ -24,10 +24,10 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
             bldr.WriteInt(requestId);
 
-            using (NpgsqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
+            using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
             {
-                var rowCmd = new NpgsqlCommand("SELECT COUNT(*) FROM worlds", connection);
-                var cmd = new NpgsqlCommand("SELECT * FROM worlds", connection);
+                var rowCmd = new SqlCommand("SELECT COUNT(*) FROM worlds", connection);
+                var cmd = new SqlCommand("SELECT * FROM worlds", connection);
 
                 connection.Open();
 

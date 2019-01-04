@@ -1,8 +1,8 @@
-﻿using Npgsql;
-using Shaiya.Origin.Common.Logging;
+﻿using Shaiya.Origin.Common.Logging;
 using Shaiya.Origin.Common.Networking.Server.Session;
 using Shaiya.Origin.Database.Connector;
 using System;
+using System.Data.SqlClient;
 
 namespace Shaiya.Origin.Database.IO.Packets.Impl
 {
@@ -16,9 +16,9 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
             try
             {
-                using (NpgsqlConnection connection = new DatabaseConnector().GetConnection("origin_userdata"))
+                using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_userdata"))
                 {
-                    var cmd = new NpgsqlCommand("DELETE FROM sessions where identity_keys = @identity_keys", connection);
+                    var cmd = new SqlCommand("DELETE FROM sessions where identity_keys = @identity_keys", connection);
                     cmd.Parameters.AddWithValue("@identity_keys", sessionKey);
 
                     connection.Open();

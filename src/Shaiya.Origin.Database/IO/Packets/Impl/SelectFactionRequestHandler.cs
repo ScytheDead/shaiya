@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Npgsql;
+using System.Data.SqlClient;
 using Shaiya.Origin.Common.Networking.Server.Session;
 using Shaiya.Origin.Database.Connector;
 
@@ -24,10 +22,10 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
             byte faction = data[4];
             byte serverId = data[5];
 
-            using (NpgsqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
+            using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
             {
 
-                var cmd = new NpgsqlCommand("UPDATE users SET faction = @faction WHERE user_id = @user_id AND server_id = @server_id", connection);
+                var cmd = new SqlCommand("UPDATE users SET faction = @faction WHERE user_id = @user_id AND server_id = @server_id", connection);
                 cmd.Parameters.AddWithValue(":faction", faction);
                 cmd.Parameters.AddWithValue(":user_id", userId);
                 cmd.Parameters.AddWithValue(":server_id", serverId);

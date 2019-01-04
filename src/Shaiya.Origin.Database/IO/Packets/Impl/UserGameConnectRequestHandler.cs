@@ -1,10 +1,9 @@
-﻿using Npgsql;
+﻿using System.Data.SqlClient;
 using Shaiya.Origin.Common.Database.Structs.Game;
 using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
 using Shaiya.Origin.Common.Serializer;
 using Shaiya.Origin.Database.Connector;
-using System.Text;
 
 namespace Shaiya.Origin.Database.IO.Packets.Impl
 {
@@ -29,12 +28,12 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
             bldr.WriteInt(requestId);
 
-            using (NpgsqlConnection connection = new DatabaseConnector().GetConnection("origin_userdata"))
+            using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_userdata"))
             {
-                var cmd = new NpgsqlCommand("validate_game_connect", connection);
+                var cmd = new SqlCommand("validate_game_connect", connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue(":user_id", handshake.userId);
-                cmd.Parameters.AddWithValue(":identity_keys", NpgsqlTypes.NpgsqlDbType.Bytea, handshake.identityKeys);
+                cmd.Parameters.AddWithValue(":identity_keys", handshake.identityKeys);
 
                 connection.Open();
 

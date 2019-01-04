@@ -12,13 +12,13 @@ namespace Shaiya.Origin.Database
         {
             var connector = new DatabaseConnector();
 
-            if (!connector.Connect("postgres"))
+            if (!connector.Connect())
             {
                 Logger.Error("Failed to connect to database!");
                 return;
             }
 
-            Logger.Info("Successfully connected to the PostgreSQL database!");
+            Logger.Info("Successfully connected to the MS SQL database!");
 
             var socketServer = new SocketServer();
 

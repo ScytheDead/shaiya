@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using Npgsql;
 using Shaiya.Origin.Common.Database.Structs.Game;
 using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
@@ -32,10 +30,10 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
             request = Serializer.Deserialize<CreateCharacterRequest>(data.Skip(5).ToArray());
 
-            using (NpgsqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
+            using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
             {
 
-                var cmd = new NpgsqlCommand("create_character", connection);
+                var cmd = new SqlCommand("create_character", connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue(":server_id", serverId);
                 cmd.Parameters.AddWithValue(":user_id", userId);

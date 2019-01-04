@@ -1,8 +1,8 @@
-﻿using Npgsql;
-using Shaiya.Origin.Common.Networking.Packets;
+﻿using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
 using Shaiya.Origin.Database.Connector;
 using System;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace Shaiya.Origin.Database.IO.Packets.Impl
@@ -30,9 +30,9 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
             bldr.WriteInt(requestId);
 
-            using (NpgsqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
+            using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
             {
-                var cmd = new NpgsqlCommand("check_available_name", connection);
+                var cmd = new SqlCommand("check_available_name", connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue(":name", name);
 

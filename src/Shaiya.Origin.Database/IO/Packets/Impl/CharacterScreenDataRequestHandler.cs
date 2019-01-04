@@ -1,11 +1,11 @@
-﻿using Npgsql;
-using Shaiya.Origin.Common.Database.Structs.Game;
+﻿using Shaiya.Origin.Common.Database.Structs.Game;
 using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
 using Shaiya.Origin.Common.Serializer;
 using Shaiya.Origin.Database.Connector;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 
 namespace Shaiya.Origin.Database.IO.Packets.Impl
@@ -29,16 +29,16 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
             List<Character> characters = new List<Character>();
 
-            using (NpgsqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
+            using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_gamedata"))
             {
                 int userId = BitConverter.ToInt32(data, 0);
                 byte serverId = data[4];
 
-                NpgsqlCommand rowCmd = new NpgsqlCommand("SELECT COUNT(*) FROM load_game_characters(@user_id, @server_id)", connection);
+                SqlCommand rowCmd = new SqlCommand("SELECT COUNT(*) FROM load_game_characters(@user_id, @server_id)", connection);
                 rowCmd.Parameters.AddWithValue("@user_id", userId);
                 rowCmd.Parameters.AddWithValue("@server_id", (int)serverId);
 
-                NpgsqlCommand cmd = new NpgsqlCommand("load_game_characters", connection);
+                SqlCommand cmd = new SqlCommand("load_game_characters", connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue(":user_id", userId);
                 cmd.Parameters.AddWithValue(":server_id", (int)serverId);
@@ -48,7 +48,7 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
                 int rowCount = Convert.ToInt32(rowCmd.ExecuteScalar());
 
                 // Execute the prepared statement
-                NpgsqlDataReader reader = cmd.ExecuteReader();
+                SqlDataReader reader = cmd.ExecuteReader();
 
                 bldr.WriteInt(rowCount);
 
