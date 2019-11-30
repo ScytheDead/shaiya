@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Shaiya.Origin.Login.Model;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shaiya.Origin.Database.Model
@@ -23,6 +24,6 @@ namespace Shaiya.Origin.Database.Model
         public byte AdminLevel { get; set; }
 
         [Column("Status")]
-        public short Status { get; set; }
+        public UserStatus Status { get; set; }
     }
 }

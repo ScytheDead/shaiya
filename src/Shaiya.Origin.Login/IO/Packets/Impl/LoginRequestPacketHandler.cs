@@ -3,6 +3,7 @@ using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
 using Shaiya.Origin.Common.Serializer;
 using Shaiya.Origin.Database;
+using Shaiya.Origin.Login.Model;
 using System;
 using System.Linq;
 using System.Text;
@@ -40,23 +41,21 @@ namespace Shaiya.Origin.Login.IO.Packets.Impl
 
             using (var dbContext = new UsersDbContext())
             {
-                var user = dbContext.Users.FirstOrDefault(u => u.Name == username && u.Password == password);
-
+                var user = dbContext.Users.SingleOrDefault(u => u.Name == username && u.Password == password);
+                var builder = new PacketBuilder(Common.Packets.Opcodes.LOGIN_REQUEST);
                 if (user is null) // User not found.
                 {
-                    return true; // Send client error response?
+                    builder.WriteByte((byte)UserStatus.WrongUsernameOrPassword);
+                    session.Write(builder.ToPacket());
+                    return true;
                 }
-
-                var builder = new PacketBuilder(Common.Packets.Opcodes.LOGIN_REQUEST);
 
                 builder.WriteByte((byte)user.Status);
 
-                if (user.Status == 0) // TODO: what is 0?
+                if (user.Status == UserStatus.Active)
                 {
                     builder.WriteInt(user.Id);
                     builder.WriteByte(user.AdminLevel);
-                    builder.WriteBytes(new byte[16]); // TODO: What is identity keys?
-                    session.SetIdentityKeys(new byte[16]); // TODO: What is identity keys?
                     HandleServerList(session);
                 }
 
