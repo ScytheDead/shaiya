@@ -97,10 +97,10 @@ namespace Shaiya.Origin.Game.World.Pulse.Task.Impl
                     }
 
                     // The item types
-                    responseBldr.WriteBytes(character.itemTypes, character.itemTypes.Length);
+                    responseBldr.WriteBytes(character.itemTypes);
 
                     // The item type ids
-                    responseBldr.WriteBytes(character.itemTypeIds, character.itemTypeIds.Length);
+                    responseBldr.WriteBytes(character.itemTypeIds);
 
                     // Write 535 null bytes
                     for (int j = 0; j < 535; j++)
@@ -108,7 +108,7 @@ namespace Shaiya.Origin.Game.World.Pulse.Task.Impl
                         responseBldr.WriteByte(0);
                     }
 
-                    responseBldr.WriteBytes(character.name, character.name.Length);
+                    responseBldr.WriteBytes(character.name);
 
                     // Write the character deletion flag
                     responseBldr.WriteByte(0);

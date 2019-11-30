@@ -45,7 +45,7 @@ namespace Shaiya.Origin.Game.World.Pulse.Task.Impl
 
             bldr.WriteInt(localPlayer.index);
 
-            bldr.WriteBytes(requestArray, requestArray.Length);
+            bldr.WriteBytes(requestArray);
 
             dbClient.Write(bldr.ToPacket(), (_data, _length) =>
             {

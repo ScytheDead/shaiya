@@ -33,7 +33,7 @@ namespace Shaiya.Origin.Database.Connector
             var connection = new SqlConnection();
 
             // The connection string
-            string connString = "Data Source=127.0.0.1;User ID=Shaiya;Password=Shaiya123";
+            string connString = $"Data Source=127.0.0.1;User ID=Shaiya;Password=Shaiya123;Database={database};";
 
             // Set the connection string
             connection.ConnectionString = connString;

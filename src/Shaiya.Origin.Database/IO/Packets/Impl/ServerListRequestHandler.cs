@@ -55,7 +55,7 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
                     var array = Serializer.Serialize(server);
 
-                    bldr.WriteBytes(array, array.Length);
+                    bldr.WriteBytes(array);
                 }
                 reader.Close();
             }

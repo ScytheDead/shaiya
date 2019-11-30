@@ -35,7 +35,7 @@ namespace Shaiya.Origin.Game.World.Pulse.Task.Impl
 
             var bldr = new PacketBuilder(Common.Database.Opcodes.CHECK_AVAILABLE_NAME);
 
-            bldr.WriteBytes(Encoding.UTF8.GetBytes(_name), Encoding.UTF8.GetBytes(_name).Length);
+            bldr.WriteBytes(Encoding.UTF8.GetBytes(_name));
 
             dbClient.Write(bldr.ToPacket(), (_data, _length) =>
             {

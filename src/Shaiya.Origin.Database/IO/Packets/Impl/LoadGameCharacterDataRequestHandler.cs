@@ -94,7 +94,7 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
                         // Write a successful load response
                         bldr.WriteByte(0);
 
-                        bldr.WriteBytes(array, array.Length);
+                        bldr.WriteBytes(array);
                     }
                     reader.Close();
                 }

@@ -38,7 +38,7 @@ namespace Shaiya.Origin.Game.IO.Packets.Impl
 
             var array = Serializer.Serialize(handshake);
 
-            bldr.WriteBytes(array, array.Length);
+            bldr.WriteBytes(array);
 
             dbClient.Write(bldr.ToPacket(), (_data, _length) =>
             {

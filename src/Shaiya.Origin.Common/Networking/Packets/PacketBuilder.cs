@@ -48,14 +48,14 @@ namespace Shaiya.Origin.Common.Networking.Packets
         /// Writes an array of bytes to the payload
         /// </summary>
         /// <param name="values">The values to write</param>
-        /// <param name="length">The length</param>
         /// <returns>This instance, for method chaining</returns>
-        public PacketBuilder WriteBytes(byte[] values, int length)
+        public PacketBuilder WriteBytes(byte[] values)
         {
-            for (int i = 0; i < length; i++)
+            foreach (var value in values)
             {
-                WriteByte(values[i]);
+                WriteByte(value);
             }
+
             return this;
         }
 

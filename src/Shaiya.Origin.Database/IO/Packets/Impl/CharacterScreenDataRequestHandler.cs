@@ -84,7 +84,7 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
 
             byte[] array = Serializer.Serialize(characters);
 
-            bldr.WriteBytes(array, array.Length);
+            bldr.WriteBytes(array);
 
             session.Write(bldr.ToPacket());
 

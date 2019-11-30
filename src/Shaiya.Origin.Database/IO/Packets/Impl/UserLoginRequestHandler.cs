@@ -28,14 +28,9 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
             Logger.Info("Password: {0}", password);
             Logger.Info("Ip: {0}", ipAddress);
 
-            using (SqlConnection connection = new DatabaseConnector().GetConnection("origin_userdata"))
+            using (SqlConnection connection = new DatabaseConnector().GetConnection("PS_UserData"))
             {
-                var cmd = new SqlCommand("validate_login_request", connection);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue(":username", username);
-                cmd.Parameters.AddWithValue(":password", password);
-                cmd.Parameters.AddWithValue(":ip_address", ipAddress);
-
+                var cmd = new SqlCommand($"SELECT UserId, Status, AdminLevel FROM Users_Master WHERE UserID = '{username}' AND Pw = '{password}'", connection);
                 connection.Open();
 
                 // Execute the prepared statement
@@ -50,7 +45,7 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
                     int status = reader.IsDBNull(1) ? 1 : reader.GetInt16(1);
                     int privilegeLevel = reader.IsDBNull(2) ? 0 : reader.GetInt16(2);
                     byte[] identityKeys = new byte[16];
-                    var bytesRead = reader.IsDBNull(3) ? 0 : reader.GetBytes(3, 0, identityKeys, 0, 16); 
+                    //var bytesRead = reader.IsDBNull(3) ? 0 : reader.GetBytes(3, 0, identityKeys, 0, 16); 
 
                     loginResponse.userId = userId;
                     loginResponse.status = status;
@@ -61,7 +56,7 @@ namespace Shaiya.Origin.Database.IO.Packets.Impl
                     var bldr = new PacketBuilder(opcode);
 
                     bldr.WriteInt(requestId);
-                    bldr.WriteBytes(array, array.Length);
+                    bldr.WriteBytes(array);
 
                     session.Write(bldr.ToPacket());
                 }

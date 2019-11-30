@@ -53,9 +53,9 @@ namespace Shaiya.Origin.Game.IO.Packets.Outgoing
             var position = character.GetPosition();
 
             // Write the position values
-            bldr.WriteBytes(BitConverter.GetBytes(position.x), 4);
-            bldr.WriteBytes(BitConverter.GetBytes(position.height), 4);
-            bldr.WriteBytes(BitConverter.GetBytes(position.y), 4);
+            bldr.WriteBytes(BitConverter.GetBytes(position.x));
+            bldr.WriteBytes(BitConverter.GetBytes(position.height));
+            bldr.WriteBytes(BitConverter.GetBytes(position.y));
 
             bldr.WriteInt(character.kills);
             bldr.WriteInt(character.deaths);

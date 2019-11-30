@@ -23,7 +23,7 @@ namespace Shaiya.Origin.Login.IO.Packets.Impl
 
             var bldr = new PacketBuilder(Common.Database.Opcodes.DELETE_SESSION);
 
-            bldr.WriteBytes(identityKeys, 16);
+            bldr.WriteBytes(identityKeys);
 
             dbClient.Write(bldr.ToPacket());
 
