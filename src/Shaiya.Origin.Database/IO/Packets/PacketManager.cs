@@ -15,7 +15,6 @@ namespace Shaiya.Origin.Database.IO.Packets
             _handlers[0] = new DefaultPacketHandler();
 
             // Define the database server packet handlers
-            _handlers[Opcodes.USER_LOGIN_REQUEST] = new UserLoginRequestHandler();
             _handlers[Opcodes.DELETE_SESSION] = new DeleteSessionRequestHandler();
             _handlers[Opcodes.SERVER_LIST] = new ServerListRequestHandler();
             _handlers[Opcodes.USER_GAME_CONNECT] = new UserGameConnectRequestHandler();

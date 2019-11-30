@@ -7,15 +7,6 @@
     public class Opcodes
     {
         /// <summary>
-        /// Represents a packet sent from the login server, to the database server,
-        /// requesting that a user login request is verified against the database details.
-        ///
-        /// The client sends the username requesting to login, and an MD5 hash of their password.
-        /// The database server responds with an instance of <see cref="Structs.Login.LoginResponse"/>.
-        /// </summary>
-        public const int USER_LOGIN_REQUEST = 1;
-
-        /// <summary>
         /// Represents a packet sent from the login server to the database server,
         /// requesting the server list.
         /// </summary>

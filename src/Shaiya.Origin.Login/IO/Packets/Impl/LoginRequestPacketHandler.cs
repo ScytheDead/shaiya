@@ -2,6 +2,7 @@
 using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
 using Shaiya.Origin.Common.Serializer;
+using Shaiya.Origin.Database;
 using System;
 using System.Linq;
 using System.Text;
@@ -28,56 +29,39 @@ namespace Shaiya.Origin.Login.IO.Packets.Impl
                 return true;
             }
 
-            byte[] username = new byte[18];
-            byte[] password = new byte[16];
+            byte[] usernameBytes = new byte[18];
+            byte[] passwordBytes = new byte[16];
 
-            Array.Copy(data, 0, username, 0, 18);
-            Array.Copy(data, 32, password, 0, 16);
+            Array.Copy(data, 0, usernameBytes, 0, 18);
+            Array.Copy(data, 32, passwordBytes, 0, 16);
 
-            var dbClient = LoginService.GetDbClient();
+            string username = Encoding.UTF8.GetString(usernameBytes).TrimEnd('\0');
+            string password = Encoding.UTF8.GetString(passwordBytes).TrimEnd('\0');
 
-            LoginRequest loginRequest = new LoginRequest();
-
-            byte[] ipAddress = new byte[15];
-            ipAddress = Encoding.UTF8.GetBytes(session.GetRemoteAdress());
-
-            loginRequest.username = username;
-            loginRequest.password = password;
-            loginRequest.ipAddress = ipAddress;
-
-            var bldr = new PacketBuilder(Common.Database.Opcodes.USER_LOGIN_REQUEST);
-
-            var array = Serializer.Serialize(loginRequest);
-
-            bldr.WriteBytes(array, array.Length);
-
-            dbClient.Write(bldr.ToPacket(), (_data, _length) =>
+            using (var dbContext = new UsersDbContext())
             {
-                LoginResponse loginResponse = new LoginResponse();
+                var user = dbContext.Users.FirstOrDefault(u => u.Name == username && u.Password == password);
 
-                loginResponse = Serializer.Deserialize<LoginResponse>(_data);
+                if (user is null) // User not found.
+                {
+                    return true; // Send client error response?
+                }
 
                 var builder = new PacketBuilder(Common.Packets.Opcodes.LOGIN_REQUEST);
 
-                int status = loginResponse.status;
+                builder.WriteByte((byte)user.Status);
 
-                builder.WriteByte((byte)status);
-
-                if (status == 0)
+                if (user.Status == 0) // TODO: what is 0?
                 {
-                    builder.WriteInt(loginResponse.userId);
-
-                    builder.WriteByte((byte)loginResponse.privilegeLevel);
-
-                    builder.WriteBytes(loginResponse.identityKeys, 16);
-
-                    session.SetIdentityKeys(loginResponse.identityKeys);
-
+                    builder.WriteInt(user.Id);
+                    builder.WriteByte(user.AdminLevel);
+                    builder.WriteBytes(new byte[16]); // TODO: What is identity keys?
+                    session.SetIdentityKeys(new byte[16]); // TODO: What is identity keys?
                     HandleServerList(session);
                 }
 
                 session.Write(builder.ToPacket());
-            });
+            }
 
             return true;
         }
@@ -108,7 +92,7 @@ namespace Shaiya.Origin.Login.IO.Packets.Impl
                     bldr.WriteShort(server.serverId);
                     bldr.WriteShort(server.status);
                     bldr.WriteShort(server.population);
-                    bldr.WriteBytes(Encoding.UTF8.GetBytes(server.serverName), Encoding.UTF8.GetByteCount(server.serverName));
+                    bldr.WriteBytes(Encoding.UTF8.GetBytes(server.serverName));
                 }
             }
 
