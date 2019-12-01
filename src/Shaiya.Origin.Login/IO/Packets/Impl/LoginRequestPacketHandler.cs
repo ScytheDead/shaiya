@@ -1,7 +1,5 @@
-﻿using Shaiya.Origin.Common.Database.Structs.Login;
-using Shaiya.Origin.Common.Networking.Packets;
+﻿using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
-using Shaiya.Origin.Common.Serializer;
 using Shaiya.Origin.Database;
 using Shaiya.Origin.Login.Model;
 using System;

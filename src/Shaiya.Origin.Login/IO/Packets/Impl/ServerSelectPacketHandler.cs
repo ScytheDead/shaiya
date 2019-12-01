@@ -1,5 +1,8 @@
 ﻿using Shaiya.Origin.Common.Networking.Packets;
 using Shaiya.Origin.Common.Networking.Server.Session;
+using Shaiya.Origin.Database;
+using Shaiya.Origin.Login.Model;
+using System.Linq;
 using System.Net;
 
 namespace Shaiya.Origin.Login.IO.Packets.Impl
@@ -28,40 +31,33 @@ namespace Shaiya.Origin.Login.IO.Packets.Impl
 
             int serverId = (data[0] & 0xFF);
 
+            // TODO: not sure why, but here is always -1. If someone can ever answer me I would be very grateful.
             int clientVersion = ((data[1] & 0xFF) + ((data[2] & 0xFF) << 8) + ((data[3] & 0xFF) << 16) + ((data[4] & 0xFF) << 24));
 
-            lock (_syncObject)
+            using (var dbContext = new ServersDbContext())
             {
-                var servers = LoginService.GetServers();
-
-                Common.Database.Structs.Game.Server foundServer = new Common.Database.Structs.Game.Server();
-
-                // Loop through the servers
-                foreach (var server in servers)
+                // TODO: somehow check client version...
+                var foundServer = dbContext.Servers.SingleOrDefault(s => s.Id == serverId);
+                if (foundServer is null) // Server not found.
                 {
-                    // If the server id matches
-                    if (server.serverId == serverId)
-                    {
-                        foundServer = server;
-                        break;
-                    }
+                    bldr.WriteByte(unchecked((byte)SelectServer.CannotConnect));
+                    session.Write(bldr.ToPacket());
+                    return true;
                 }
 
-                bldr.WriteByte(clientVersion == foundServer.clientVersion && foundServer.status == 0 ? (byte)serverId : unchecked((byte)-2));
-
-                if (clientVersion == foundServer.clientVersion)
+                // TODO: remove || true, when you get how to check client version.
+                if (clientVersion == foundServer.ClientVersion || true)
                 {
-                    IPAddress ipAddress = IPAddress.Parse(foundServer.ipAddress);
+                    bldr.WriteByte((byte)SelectServer.Success);
 
+                    IPAddress ipAddress = IPAddress.Parse(foundServer.IpAddress.Trim());
                     foreach (var i in ipAddress.GetAddressBytes())
                     {
                         bldr.WriteByte(i);
                     }
                 }
+                session.Write(bldr.ToPacket());
             }
-
-            session.Write(bldr.ToPacket());
-
             return true;
         }
     }
