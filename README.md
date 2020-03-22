@@ -1,7 +1,7 @@
 # Shaiya Origin
 
 ## Notice
-This repository is no longer under active development. 
+This repository is no longer under active development! Please follow current development here: https://github.com/aosyatnik/Imgeneus
 
 ## Introduction
 Shaiya Origin is an emulator for the Shaiya MMORPG. The core servers are written in C#, with an extendable scripting system written in Python (not yet completed). This project was solely made for learning purposes and is not intended to be used in production.
